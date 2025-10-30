@@ -280,8 +280,16 @@ function getIndexOf(str, letter) {
  *  12345, 0    => false
  *  12345, 6    => false
  */
-function isContainNumber(/* num, digit */) {
-  throw new Error('Not implemented');
+function isContainNumber(num, digit) {
+  let current = num;
+
+  while (current > 0) {
+    if (current % 10 === digit) {
+      return true;
+    }
+    current = (current - (current % 10)) / 10;
+  }
+  return num === 0 && digit === 0;
 }
 
 /**
@@ -341,8 +349,27 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const n = matrix.length;
+  const addMatrix = matrix;
+  if (n === 0) return addMatrix;
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = i + 1; j < n; j += 1) {
+      const tmp = addMatrix[i][j];
+      addMatrix[i][j] = addMatrix[j][i];
+      addMatrix[j][i] = tmp;
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = 0; j < Math.floor(n / 2); j += 1) {
+      const tmp = addMatrix[i][j];
+      addMatrix[i][j] = addMatrix[i][n - 1 - j];
+      addMatrix[i][n - 1 - j] = tmp;
+    }
+  }
+  return addMatrix;
 }
 
 /**
@@ -402,8 +429,50 @@ function shuffleChar(/* str, iterations */) {
  * 321321   => 322113
  *
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  if (number < 10) return number;
+
+  const rev = [];
+  let n = number;
+  while (n > 0) {
+    rev.push(n % 10);
+    n = Math.floor(n / 10);
+  }
+
+  const digits = new Array(rev.length);
+  for (let i = 0; i < rev.length; i += 1) {
+    digits[i] = rev[rev.length - 1 - i];
+  }
+
+  let i = digits.length - 2;
+  while (i >= 0 && digits[i] >= digits[i + 1]) {
+    i -= 1;
+  }
+
+  if (i < 0) return number;
+
+  let j = digits.length - 1;
+  while (digits[j] <= digits[i]) {
+    j -= 1;
+  }
+  let tmp = digits[i];
+  digits[i] = digits[j];
+  digits[j] = tmp;
+  let left = i + 1;
+  let right = digits.length - 1;
+  while (left < right) {
+    tmp = digits[left];
+    digits[left] = digits[right];
+    digits[right] = tmp;
+    left += 1;
+    right -= 1;
+  }
+  let result = 0;
+  for (let k = 0; k < digits.length; k += 1) {
+    result = result * 10 + digits[k];
+  }
+
+  return result;
 }
 
 module.exports = {
